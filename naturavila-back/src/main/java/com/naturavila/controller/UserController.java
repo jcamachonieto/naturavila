@@ -41,18 +41,15 @@ public class UserController {
 	
     @GetMapping(value = "/user/{id}")
     ResponseEntity<UserEntity> findById(@PathVariable("id") @Min(1) Long id) throws NaturavilaException {
-    	UserEntity user = userService.findById(id)
-            .orElseThrow(() -> new NaturavilaException("User not found with ID :" + id));
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.findById(id));
     }
 	
 	@PutMapping("/user/{id}")
 	@PreAuthorize("hasAnyRole('USER')")
 	ResponseEntity<UserEntity> updateUser(@PathVariable("id") @Min(1) Long id, @Valid @RequestBody UserEntity user) throws NaturavilaException {
 		// persisting the user
-		userService.findById(id)
-	            .orElseThrow(() -> new NaturavilaException("User not found with ID :" + id));
-		user.setId(id);
+		UserEntity userDB = userService.findById(id);
+		user.setId(userDB.getId());
 		return ResponseEntity.ok(userService.saveUser(user));
 	}
 

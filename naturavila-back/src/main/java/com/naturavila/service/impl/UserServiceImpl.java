@@ -31,8 +31,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Optional<UserEntity> findById(Long id) {
-		return userRepository.findById(id);
+	public UserEntity findById(Long id) throws NaturavilaException {
+		Optional<UserEntity> user = userRepository.findById(id);
+		if (user.isEmpty()) {
+			throw new NaturavilaException("User not found with ID :" + id);
+		}
+		return user.get();
 	}
 
 }
