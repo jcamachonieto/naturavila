@@ -1,8 +1,5 @@
 package com.naturavila.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.naturavila.config.RoleName;
-import com.naturavila.entity.RoleEntity;
 import com.naturavila.entity.UserEntity;
 import com.naturavila.exception.NaturavilaException;
 import com.naturavila.service.RoleService;
@@ -32,9 +28,7 @@ public class SiginController {
 	@PostMapping("/signin")
 	ResponseEntity<UserEntity> addUser(@Valid @RequestBody UserEntity user) throws NaturavilaException {
 		// persisting the user
-		List<RoleEntity> roles = new ArrayList<>();
-		roles.add(roleService.findByRoleName(RoleName.USER));
-		user.setRoles(roles);
+		user.setRole(roleService.findByRoleName(RoleName.USER));
 		UserEntity userDB = userService.saveUser(user);
 		return ResponseEntity.ok(userDB);
 	}
