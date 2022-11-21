@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.naturavila.entity.User;
+import com.naturavila.entity.UserEntity;
 import com.naturavila.mapper.UserMapper;
 import com.naturavila.repository.UserRepository;
 
@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userRepository.findByIdentifier(userId)
+        UserEntity user = userRepository.findByIdentifier(userId)
             .orElseThrow(() -> new UsernameNotFoundException("User NOT Found"));
         return UserMapper.userToPrincipal(user);
     }

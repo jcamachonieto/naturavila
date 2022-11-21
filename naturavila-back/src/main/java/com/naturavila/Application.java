@@ -26,6 +26,12 @@ public class Application {
 				System.out.println(beanName);
 			}
 			*/
+			
+			/*
+			for (RoleEntity role : roleRepository.findAll()) {
+				System.out.println(role.toString());
+			}
+			*/
 		};
 	}
 
