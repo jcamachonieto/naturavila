@@ -1,11 +1,15 @@
 package com.naturavila.controller;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +37,23 @@ public class UserController {
 		user.setRole(roleService.findByRoleName(RoleName.MANAGER));
 		UserEntity userDB = userService.saveUser(user);
 		return ResponseEntity.ok(userDB);
+	}
+	
+    @GetMapping(value = "/user/{id}")
+    ResponseEntity<UserEntity> findById(@PathVariable("id") @Min(1) Long id) throws NaturavilaException {
+    	UserEntity user = userService.findById(id)
+            .orElseThrow(() -> new NaturavilaException("User not found with ID :" + id));
+        return ResponseEntity.ok(user);
+    }
+	
+	@PutMapping("/user/{id}")
+	@PreAuthorize("hasAnyRole('USER')")
+	ResponseEntity<UserEntity> updateUser(@PathVariable("id") @Min(1) Long id, @Valid @RequestBody UserEntity user) throws NaturavilaException {
+		// persisting the user
+		userService.findById(id)
+	            .orElseThrow(() -> new NaturavilaException("User not found with ID :" + id));
+		user.setId(id);
+		return ResponseEntity.ok(userService.saveUser(user));
 	}
 
 }
