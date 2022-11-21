@@ -1,12 +1,16 @@
 package com.naturavila.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
@@ -20,10 +24,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Data
 @Builder
-public class User implements Serializable {
+public class User implements Serializable  {
 
 	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Setter
@@ -42,5 +45,35 @@ public class User implements Serializable {
 	
 	@NotBlank(message = "password is mandatory")
 	private String password;
+	
+	private Boolean enabled;
+	
+	@Column(name = "operation")
+    private String operation;
+     
+    @Column(name = "timestamp")
+    private long timestamp;
+    
+    @PrePersist
+    public void onPrePersist() {
+    	setEnabled(Boolean.TRUE);
+        audit("INSERT");
+    }
+     
+    @PreUpdate
+    public void onPreUpdate() {
+        audit("UPDATE");
+    }
+     
+    @PreRemove
+    public void onPreRemove() {
+    	setEnabled(Boolean.FALSE);
+        audit("DELETE");
+    }
+     
+    private void audit(String operation) {
+        setOperation(operation);
+        setTimestamp((new Date()).getTime());
+    }
 
 }

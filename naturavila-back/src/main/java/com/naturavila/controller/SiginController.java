@@ -14,13 +14,13 @@ import com.naturavila.exception.NaturavilaException;
 import com.naturavila.service.UserService;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/public")
+public class SiginController {
 
 	@Autowired
 	private UserService userService;
 
-	@PostMapping
+	@PostMapping("/signin")
 	ResponseEntity<User> addUser(@Valid @RequestBody User user) throws NaturavilaException {
 		// persisting the user
 		User userDB = userService.saveUser(user);
