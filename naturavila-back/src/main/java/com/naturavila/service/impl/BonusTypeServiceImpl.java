@@ -17,7 +17,7 @@ public class BonusTypeServiceImpl implements BonusTypeService {
 	private BonusTypeRepository bonusTypeRepository;
 
 	@Override
-	public BonusTypeEntity save(BonusTypeEntity bonusType) throws NaturavilaException {
+	public BonusTypeEntity create(BonusTypeEntity bonusType) throws NaturavilaException {
 		if (bonusTypeRepository.findByName(bonusType.getName()) == null) {
 			return bonusTypeRepository.save(bonusType);
 		} else {
@@ -28,6 +28,20 @@ public class BonusTypeServiceImpl implements BonusTypeService {
 	@Override
 	public List<BonusTypeEntity> getAll() {
 		return bonusTypeRepository.findAll();
+	}
+
+	@Override
+	public BonusTypeEntity findById(Long id) throws NaturavilaException {
+		BonusTypeEntity bonusType = bonusTypeRepository.findById(id)
+				.orElseThrow(() -> new NaturavilaException("BonusType Not Found with ID :" + id));
+		return bonusType;
+	}
+
+	@Override
+	public BonusTypeEntity update(Long id, Boolean enabled) throws NaturavilaException {
+		BonusTypeEntity bonusType = this.findById(id);
+		bonusType.setEnabled(enabled);
+		return bonusTypeRepository.save(bonusType);
 	}
 
 }

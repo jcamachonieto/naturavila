@@ -1,11 +1,16 @@
 package com.naturavila.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -23,7 +28,7 @@ public class BonusTypeEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Long id;
 	
 	@NotBlank(message = "name is mandatory")
 	private String name;
@@ -31,5 +36,35 @@ public class BonusTypeEntity implements Serializable {
 	@NotNull(message = "quantity is mandatory")
 	@Range(min = 1)
 	private int quantity;
+	
+	private Boolean enabled;
+	
+	@Column(name = "operation")
+	private String operation;
+
+	@Column(name = "timestamp")
+	private long timestamp;
+	
+	@PrePersist
+	public void onPrePersist() {
+		setEnabled(Boolean.TRUE);
+		audit("INSERT");
+	}
+
+	@PreUpdate
+	public void onPreUpdate() {
+		audit("UPDATE");
+	}
+
+	@PreRemove
+	public void onPreRemove() {
+		setEnabled(Boolean.FALSE);
+		audit("DELETE");
+	}
+
+	private void audit(String operation) {
+		setOperation(operation);
+		setTimestamp((new Date()).getTime());
+	}
 
 }

@@ -7,8 +7,12 @@ import com.naturavila.exception.NaturavilaException;
 
 public interface BonusTypeService {
 	
-	BonusTypeEntity save(BonusTypeEntity bonusType) throws NaturavilaException;
+	BonusTypeEntity create(BonusTypeEntity bonusType) throws NaturavilaException;
 	
 	List<BonusTypeEntity> getAll();
+	
+	BonusTypeEntity findById(Long id) throws NaturavilaException;
+	
+	BonusTypeEntity update(Long id, Boolean enabled) throws NaturavilaException;
 
 }
