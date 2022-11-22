@@ -2,9 +2,12 @@ package com.naturavila.config;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.naturavila.model.UserPrincipal;
 
@@ -21,8 +24,17 @@ public class JwtProvider {
 
 	@Value("${app.jwtSecret}")
 	private String jwtSecret;
+	
 	@Value("${app.jwtExpirationInMs}")
 	private int jwtExpirationInMs;
+	
+	public String getJwtFromRequest(HttpServletRequest request) {
+		String bearerToken = request.getHeader("Authorization");
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+			return bearerToken.substring(7, bearerToken.length());
+		}
+		return null;
+	}
 
 	public String generateToken(Authentication authentication) {
 		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();

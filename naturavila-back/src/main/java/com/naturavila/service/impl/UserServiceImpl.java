@@ -1,8 +1,10 @@
 package com.naturavila.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,18 @@ public class UserServiceImpl implements UserService {
 			throw new NaturavilaException("User not found with ID :" + id);
 		}
 		return user.get();
+	}
+
+	@Override
+	public UserEntity findByIdentifier(String identifier) throws NaturavilaException {
+		UserEntity user = userRepository.findByIdentifier(identifier)
+	            .orElseThrow(() -> new UsernameNotFoundException("User NOT Found by identifier:" + identifier));
+		return user;
+	}
+
+	@Override
+	public List<UserEntity> findAll() {
+		return userRepository.findAll();
 	}
 
 }

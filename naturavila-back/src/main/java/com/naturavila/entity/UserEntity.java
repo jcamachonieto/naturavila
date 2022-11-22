@@ -1,7 +1,7 @@
 package com.naturavila.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +33,7 @@ public class UserEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter
 	private Long id;
 
@@ -61,8 +61,8 @@ public class UserEntity implements Serializable {
 	@Column(name = "operation")
 	private String operation;
 
-	@Column(name = "timestamp")
-	private long timestamp;
+	@Column(columnDefinition = "TIMESTAMP")
+	private LocalDateTime timestamp;
 
 	@PrePersist
 	public void onPrePersist() {
@@ -83,7 +83,7 @@ public class UserEntity implements Serializable {
 
 	private void audit(String operation) {
 		setOperation(operation);
-		setTimestamp((new Date()).getTime());
+		setTimestamp(LocalDateTime.now());
 	}
 
 }
