@@ -17,7 +17,6 @@ import com.naturavila.config.JwtProvider;
 import com.naturavila.entity.TicketEntity;
 import com.naturavila.exception.NaturavilaException;
 import com.naturavila.service.TicketService;
-import com.naturavila.service.UserService;
 
 @RestController
 @RequestMapping("/protected/ticket")
